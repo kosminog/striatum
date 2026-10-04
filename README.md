@@ -1,4 +1,4 @@
-# agents — a rule library for Claude Code
+# striatum — a rule library for Claude Code
 
 A single source of truth for how Claude should behave on recurring kinds of work:
 brand and logo design, technical writing, marketing copy, professional communication,
@@ -34,11 +34,11 @@ project facts from a **brand profile** in the project it is running in
 ## Layout
 
 ```
-agents/
+striatum/
   README.md
-  package.json                     npm manifest for octolith; bin octolith
+  package.json                     npm manifest for striatum; bin striatum
   LICENSE                          MIT
-  bin/octolith.mjs                 CLI: sync, emit, install, each running a script below
+  bin/striatum.mjs                 CLI: sync, emit, install, each running a script below
   AGENTS.md                        universal rules + coding blocks, importable by projects
   CLAUDE.md                        one-line @AGENTS.md import for Claude Code
   .claude/rules/                   path-scoped rules emitted from blocks (Claude Code)
@@ -96,21 +96,21 @@ a rule block.
 ./scripts/install.sh
 ```
 
-**Any project, from npm.** The library is published as `octolith`. Install
-it as a dev dependency and run the `octolith` CLI against the project's own
+**Any project, from npm.** The library is published as `striatum`. Install
+it as a dev dependency and run the `striatum` CLI against the project's own
 files; the blocks come from the installed package, so no clone is needed.
 
 ```bash
-pnpm add -D octolith
-pnpm exec octolith sync AGENTS.md
-pnpm exec octolith emit claude=.claude/rules cursor=.cursor/rules
+pnpm add -D striatum
+pnpm exec striatum sync AGENTS.md
+pnpm exec striatum emit claude=.claude/rules cursor=.cursor/rules
 ```
 
-Add `octolith sync --check AGENTS.md` to the project's check script so CI
+Add `striatum sync --check AGENTS.md` to the project's check script so CI
 fails when a dependency bump changes a rule and `AGENTS.md` was not re-synced.
 Skills and agents ship in the package too: symlink
-`node_modules/octolith/skills/<name>` into `.claude/skills/`. A global
-install (`pnpm add -g octolith`) can run `octolith install`, which
+`node_modules/striatum/skills/<name>` into `.claude/skills/`. A global
+install (`pnpm add -g striatum`) can run `striatum install`, which
 is `scripts/install.sh` pointed at the installed package.
 
 **One project only.** Symlink or copy the skills you want into that project's
@@ -122,7 +122,7 @@ a plugin marketplace. The folder layout above is already plugin-shaped; nothing 
 ## Use in a project
 
 1. Copy `templates/brand-profile.md` to the project as `brand.md` and fill it in.
-2. Optionally add `@~/dev/agents/AGENTS.md` to the project's `CLAUDE.md` to import
+2. Optionally add `@~/dev/striatum/AGENTS.md` to the project's `CLAUDE.md` to import
    the universal rules.
 3. Ask for the work in plain language. The matching skill loads on its own.
 4. For a second opinion, ask for the reviewer: "have the brand reviewer check this".

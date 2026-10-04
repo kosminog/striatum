@@ -1,15 +1,15 @@
 {
-  "name": "octolith",
-  "version": "0.1.1",
+  "name": "striatum",
+  "version": "0.1.2",
   "description": "Rule library for Claude Code, Codex and Cursor: skills, reviewer agents and portable coding rule blocks, with a CLI that syncs the blocks into AGENTS.md and tool rule files",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kosminog/agents.git"
+    "url": "git+https://github.com/kosminog/striatum.git"
   },
-  "homepage": "https://github.com/kosminog/agents#readme",
-  "bugs": "https://github.com/kosminog/agents/issues",
+  "homepage": "https://github.com/kosminog/striatum#readme",
+  "bugs": "https://github.com/kosminog/striatum/issues",
   "keywords": [
     "claude-code",
     "codex",
@@ -20,7 +20,7 @@
     "conventions"
   ],
   "bin": {
-    "octolith": "bin/octolith.mjs"
+    "striatum": "bin/striatum.mjs"
   },
   "files": [
     "bin",
