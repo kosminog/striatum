@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-04 (install)
+- install.sh installs per tool: links `~/.claude/rules/coding` to the emitted
+  path-scoped rules, links skills into `~/.agents/skills/` for Codex (Cursor reads
+  it too), and appends the always-on blocks to `~/.codex/AGENTS.md` between sync
+  markers, re-synced on every run. Skips tools whose directory is absent.
+
 ## 2026-10-04 (path-scoped)
 - Blocks may carry `description` and `paths` frontmatter. `scripts/emit-rules.mjs`
   writes path-scoped blocks as Claude (`.claude/rules`), Cursor (`.cursor/rules`) or

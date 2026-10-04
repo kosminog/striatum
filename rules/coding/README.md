@@ -39,6 +39,10 @@ turn; nothing to do per project.
 **Claude Code, one project.** Add the same import line to the project's `CLAUDE.md`
 or `AGENTS.md`; Claude Code expands `@path` imports in both.
 
+**Codex, every project on this machine.** `scripts/install.sh` appends empty
+marker pairs for the always-on blocks to `~/.codex/AGENTS.md` once and syncs them
+on every run. Codex has no import syntax, so the text is inlined.
+
 **AGENTS.md projects (and the project-starter template).** Put empty marker pairs
 where each block should appear, then sync:
 
