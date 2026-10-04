@@ -1,8 +1,13 @@
 # Changelog
 
+## 2026-10-04 (octolith)
+- Package renamed to `octolith` (unscoped) and bumped to 0.1.1; the CLI is now
+  `octolith` with the same `sync`, `emit` and `install` commands. 0.1.0 was never
+  published: the `@kosminog` npm scope belongs to a different account.
+
 ## 2026-10-04 (npm)
-- Published as `@kosminog/agents`: `package.json` with a `files` whitelist, MIT
-  `LICENSE`, and a `bin/agents-rules.mjs` CLI whose `sync`, `emit` and `install`
+- Packaged for npm as `@kosminog/agents`: `package.json` with a `files` whitelist, MIT
+  `LICENSE`, and a `bin/agents-rules.mjs` CLI (since renamed) whose `sync`, `emit` and `install`
   commands run the existing scripts against the installed package's blocks.
 - `.github/workflows/publish.yml` publishes to npm with provenance on a `v*` tag
   through trusted publishing, after re-running `scripts/check.sh` and verifying the

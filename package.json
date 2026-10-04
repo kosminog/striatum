@@ -1,6 +1,6 @@
 {
-  "name": "@kosminog/agents",
-  "version": "0.1.0",
+  "name": "octolith",
+  "version": "0.1.1",
   "description": "Rule library for Claude Code, Codex and Cursor: skills, reviewer agents and portable coding rule blocks, with a CLI that syncs the blocks into AGENTS.md and tool rule files",
   "license": "MIT",
   "type": "module",
@@ -20,7 +20,7 @@
     "conventions"
   ],
   "bin": {
-    "agents-rules": "bin/agents-rules.mjs"
+    "octolith": "bin/octolith.mjs"
   },
   "files": [
     "bin",

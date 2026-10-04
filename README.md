@@ -36,9 +36,9 @@ project facts from a **brand profile** in the project it is running in
 ```
 agents/
   README.md
-  package.json                     npm manifest for @kosminog/agents; bin agents-rules
+  package.json                     npm manifest for octolith; bin octolith
   LICENSE                          MIT
-  bin/agents-rules.mjs             CLI: sync, emit, install, each running a script below
+  bin/octolith.mjs                 CLI: sync, emit, install, each running a script below
   AGENTS.md                        universal rules + coding blocks, importable by projects
   CLAUDE.md                        one-line @AGENTS.md import for Claude Code
   .claude/rules/                   path-scoped rules emitted from blocks (Claude Code)
@@ -96,21 +96,21 @@ a rule block.
 ./scripts/install.sh
 ```
 
-**Any project, from npm.** The library is published as `@kosminog/agents`. Install
-it as a dev dependency and run the `agents-rules` CLI against the project's own
+**Any project, from npm.** The library is published as `octolith`. Install
+it as a dev dependency and run the `octolith` CLI against the project's own
 files; the blocks come from the installed package, so no clone is needed.
 
 ```bash
-pnpm add -D @kosminog/agents
-pnpm exec agents-rules sync AGENTS.md
-pnpm exec agents-rules emit claude=.claude/rules cursor=.cursor/rules
+pnpm add -D octolith
+pnpm exec octolith sync AGENTS.md
+pnpm exec octolith emit claude=.claude/rules cursor=.cursor/rules
 ```
 
-Add `agents-rules sync --check AGENTS.md` to the project's check script so CI
+Add `octolith sync --check AGENTS.md` to the project's check script so CI
 fails when a dependency bump changes a rule and `AGENTS.md` was not re-synced.
 Skills and agents ship in the package too: symlink
-`node_modules/@kosminog/agents/skills/<name>` into `.claude/skills/`. A global
-install (`pnpm add -g @kosminog/agents`) can run `agents-rules install`, which
+`node_modules/octolith/skills/<name>` into `.claude/skills/`. A global
+install (`pnpm add -g octolith`) can run `octolith install`, which
 is `scripts/install.sh` pointed at the installed package.
 
 **One project only.** Symlink or copy the skills you want into that project's
