@@ -1,0 +1,3 @@
+- Run whichever tests the change needs, including functional browser tests and visual screenshot comparisons for UI changes, and maintain the visual test specifications alongside UI changes.
+- Generate missing screenshot baselines. Update existing baselines only for intentional UI changes after reviewing the differences, commit the reviewed baselines with the change, and mention them in the pull request. Never regenerate baselines to hide an unexplained comparison failure; report it instead.
+- Report validation results and any required checks that remain unrun or blocked, with the reason.

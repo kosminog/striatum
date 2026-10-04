@@ -1,0 +1,1 @@
+- Test release procedures in temporary Git repositories. Create and publish real release tags only when releasing is requested. Never move or overwrite an existing release tag; create a new version.
