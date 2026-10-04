@@ -43,6 +43,11 @@ or `AGENTS.md`; Claude Code expands `@path` imports in both.
 marker pairs for the always-on blocks to `~/.codex/AGENTS.md` once and syncs them
 on every run. Codex has no import syntax, so the text is inlined.
 
+**Any project, from npm.** `pnpm add -D @kosminog/agents` and run
+`pnpm exec agents-rules sync AGENTS.md`; the blocks come from the installed
+package. `agents-rules emit claude=.claude/rules` does the same for path-scoped
+blocks. Both accept `--check` for CI.
+
 **AGENTS.md projects (and the project-starter template).** Put empty marker pairs
 where each block should appear, then sync:
 

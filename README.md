@@ -36,6 +36,9 @@ project facts from a **brand profile** in the project it is running in
 ```
 agents/
   README.md
+  package.json                     npm manifest for @kosminog/agents; bin agents-rules
+  LICENSE                          MIT
+  bin/agents-rules.mjs             CLI: sync, emit, install, each running a script below
   AGENTS.md                        universal rules + coding blocks, importable by projects
   CLAUDE.md                        one-line @AGENTS.md import for Claude Code
   .claude/rules/                   path-scoped rules emitted from blocks (Claude Code)
@@ -73,6 +76,7 @@ agents/
     emit-rules.mjs                 writes path-scoped blocks as Claude, Cursor or Copilot rule files
     lib/blocks.mjs                 block loader shared by sync-rules and emit-rules
   .github/workflows/ci.yml         runs scripts/check.sh on push and pull request
+  .github/workflows/publish.yml    publishes to npm with provenance on a v* tag
 ```
 
 ## Install
@@ -91,6 +95,23 @@ a rule block.
 ```bash
 ./scripts/install.sh
 ```
+
+**Any project, from npm.** The library is published as `@kosminog/agents`. Install
+it as a dev dependency and run the `agents-rules` CLI against the project's own
+files; the blocks come from the installed package, so no clone is needed.
+
+```bash
+pnpm add -D @kosminog/agents
+pnpm exec agents-rules sync AGENTS.md
+pnpm exec agents-rules emit claude=.claude/rules cursor=.cursor/rules
+```
+
+Add `agents-rules sync --check AGENTS.md` to the project's check script so CI
+fails when a dependency bump changes a rule and `AGENTS.md` was not re-synced.
+Skills and agents ship in the package too: symlink
+`node_modules/@kosminog/agents/skills/<name>` into `.claude/skills/`. A global
+install (`pnpm add -g @kosminog/agents`) can run `agents-rules install`, which
+is `scripts/install.sh` pointed at the installed package.
 
 **One project only.** Symlink or copy the skills you want into that project's
 `.claude/skills/`, and the agents into `.claude/agents/`.
@@ -125,8 +146,16 @@ under 300 lines. The workflow in `.github/workflows/ci.yml` runs the same script
 every push to `main` and every pull request.
 
 ```bash
-./scripts/check.sh
+pnpm check
 ```
+
+## Release
+
+Bump `version` in `package.json`, add the `CHANGELOG.md` entry, merge, then tag
+the merge commit `v<version>` and push the tag. `.github/workflows/publish.yml`
+re-runs the checks, verifies the tag matches the version, and publishes to npm
+through trusted publishing with provenance. Never move an existing tag; cut a new
+version instead.
 
 ## Planned rule groups
 

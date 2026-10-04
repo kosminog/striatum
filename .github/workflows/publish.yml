@@ -1,0 +1,36 @@
+name: Publish
+
+# Publishes the package to npm when a v* tag is pushed. Authenticates through
+# npm trusted publishing (OIDC), so no token is stored; the trusted publisher
+# for this repository and workflow file must be configured on npmjs.com first.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
+      - name: Run checks
+        run: scripts/check.sh
+      - name: Verify the tag matches package.json
+        run: |
+          version="v$(node -p 'require("./package.json").version')"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "tag $GITHUB_REF_NAME does not match package version $version"
+            exit 1
+          fi
+      - name: Publish
+        run: npm publish --provenance --access public

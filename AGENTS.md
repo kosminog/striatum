@@ -80,4 +80,4 @@ The blocks below are rendered from `rules/coding/blocks/` by
 - Coding rule blocks live in `rules/coding/blocks/`. After editing one, re-render:
   `node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md` for an always-on block,
   `node scripts/emit-rules.mjs claude=.claude/rules` for a path-scoped one.
-- Run `./scripts/check.sh` before pushing. CI runs the same script on every push and PR.
+- Run `pnpm check` (`scripts/check.sh`) before pushing. CI runs the same script on every push and PR.

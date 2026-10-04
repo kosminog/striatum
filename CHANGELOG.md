@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-04 (npm)
+- Published as `@kosminog/agents`: `package.json` with a `files` whitelist, MIT
+  `LICENSE`, and a `bin/agents-rules.mjs` CLI whose `sync`, `emit` and `install`
+  commands run the existing scripts against the installed package's blocks.
+- `.github/workflows/publish.yml` publishes to npm with provenance on a `v*` tag
+  through trusted publishing, after re-running `scripts/check.sh` and verifying the
+  tag matches `package.json`.
+- Repository moved to `kosminog/agents`.
+
 ## 2026-10-04 (install)
 - install.sh installs per tool: links `~/.claude/rules/coding` to the emitted
   path-scoped rules, links skills into `~/.agents/skills/` for Codex (Cursor reads
