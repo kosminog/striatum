@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-04 (ci)
+- Added `.github/workflows/ci.yml` and `scripts/check.sh`: shell, Node and Python
+  syntax checks, `sync-rules.mjs --check` on `CODING.md`, and `scripts/check-rules.mjs`
+  for skill and agent frontmatter and the 300-line `SKILL.md` budget.
+
 ## 2026-10-04 (coding)
 - Added `rules/coding/`: portable rule blocks (development, git-workflow, commits,
   releases, validation-docs, validation-reporting) migrated from the project-starter

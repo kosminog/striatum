@@ -64,6 +64,9 @@ agents/
   scripts/
     install.sh                     symlinks skills and agents, imports coding rules
     sync-rules.mjs                 writes rule blocks into AGENTS.md / .jinja targets
+    check.sh                       every CI check: script syntax, rules in sync, frontmatter
+    check-rules.mjs                skill and agent frontmatter, SKILL.md line budget
+  .github/workflows/ci.yml         runs scripts/check.sh on push and pull request
 ```
 
 ## Install
@@ -98,6 +101,19 @@ Doing it by hand: copy `templates/SKILL-template.md` into `skills/<domain>-<topi
 write a pushy description, then principles, then a checklist, then one before/after
 example. Keep `SKILL.md` under 300 lines and push detail into `references/`.
 Add a line to `CHANGELOG.md`.
+
+## Checks
+
+`scripts/check.sh` runs everything CI runs: `bash -n` and shellcheck on shell
+scripts, `node --check` on Node scripts, a parse of Python scripts, a check that
+`rules/coding/CODING.md` matches its blocks, and a check that every skill and agent
+has frontmatter with a `name` matching its path, a `description`, and a `SKILL.md`
+under 300 lines. The workflow in `.github/workflows/ci.yml` runs the same script on
+every push to `main` and every pull request.
+
+```bash
+./scripts/check.sh
+```
 
 ## Planned rule groups
 
