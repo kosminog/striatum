@@ -11,12 +11,16 @@ tells Claude when to load it. Only the description sits in context permanently;
 the body loads when a matching task shows up. That keeps coding sessions cheap and
 still gives brand work the full guidance.
 
-Two other layers sit around the skills:
+Three other layers sit around the skills:
 
 - `agents/` holds **reviewer personas**. Run one after the work is done to check it
   against the rules from a fresh context.
 - `CLAUDE.md` holds the **universal rules** that apply on every turn. It is short on
   purpose. Projects can import it.
+- `rules/` holds **tool-agnostic rule blocks** for things that must be always-on
+  and readable by any agent, such as the git workflow. They are synced into
+  `AGENTS.md` files and the project-starter template, and imported by Claude. See
+  `rules/coding/README.md`.
 
 ### Rules are generic, facts are per project
 
@@ -39,6 +43,9 @@ agents/
     writing-technical/
     writing-marketing/
     writing-professional-comms/
+    coding-commit-pr/              commits, PR descriptions, pre-push checks
+    coding-branch-cleanup/         safe pruning incl. squash-merged branches
+    coding-dependency-change/      add/upgrade/remove dependencies safely
       SKILL.md                     triggers, principles, checklist  (<300 lines)
       references/                  long material, loaded on demand
       examples/                    before/after pairs
@@ -47,18 +54,24 @@ agents/
     brand-reviewer.md
     copy-editor.md
     logo-critic.md                 blind scorer for logo candidates
+    code-reviewer.md               conventions review of a diff or PR
+  rules/
+    coding/                        portable rule blocks + rendered CODING.md
   templates/
     brand-profile.md               facts each project supplies
     logo-brief.md                  plan + iteration log for a logo project
     SKILL-template.md              house format for new rules
   scripts/
-    install.sh                     symlinks skills and agents into ~/.claude
+    install.sh                     symlinks skills and agents, imports coding rules
+    sync-rules.mjs                 writes rule blocks into AGENTS.md / .jinja targets
 ```
 
 ## Install
 
-**Personal (every project on this machine).** Symlink each skill into your user
-skills directory. `scripts/install.sh` does this and skips anything already present.
+**Personal (every project on this machine).** `scripts/install.sh` symlinks each
+skill and agent into your user-level Claude directory and adds one import line to
+`~/.claude/CLAUDE.md` so the coding rules apply everywhere. It skips anything
+already present.
 
 ```bash
 ./scripts/install.sh

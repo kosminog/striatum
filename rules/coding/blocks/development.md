@@ -1,0 +1,4 @@
+- Ask before introducing a dependency or making a consequential architectural choice when the request and existing conventions do not determine the answer. Follow established decisions without reconfirming them.
+- Diagnose slow or failed tasks from their output first. Ask about connectivity when evidence points to a connection problem, and report the blocker and practical alternatives.
+- Run linters, formatters, type checkers, and test runners through the scripts the project defines (`package.json`, `Makefile`, `pyproject.toml`, or equivalent) rather than invoking the tools directly, so the project's configuration applies.
+- Follow existing style and the configured formatter; avoid unrelated formatting changes.

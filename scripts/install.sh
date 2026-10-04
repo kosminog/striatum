@@ -26,3 +26,13 @@ done
 for f in "$REPO"/agents/*.md; do
   link "$f" "$AGENTS_DST/$(basename "$f")"
 done
+
+# Import the coding rules into the user-level CLAUDE.md so they apply in every project.
+USER_CLAUDE="${HOME}/.claude/CLAUDE.md"
+IMPORT="@${REPO}/rules/coding/CODING.md"
+if [ -f "$USER_CLAUDE" ] && grep -qxF "$IMPORT" "$USER_CLAUDE"; then
+  echo "ok       ~/.claude/CLAUDE.md imports coding rules"
+else
+  printf '%s\n' "$IMPORT" >> "$USER_CLAUDE"
+  echo "added    coding rules import to ~/.claude/CLAUDE.md"
+fi

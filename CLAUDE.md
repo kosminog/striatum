@@ -20,6 +20,8 @@ short: everything here is paid for on every turn. Domain rules belong in skills.
 8. Ask one question only when different answers lead to materially different work.
    Otherwise make the call, state it, and continue.
 
+@rules/coding/CODING.md
+
 # Working in this repository
 
 - New rules follow the `rule-authoring` skill. Read it before adding or editing a skill.
@@ -27,3 +29,5 @@ short: everything here is paid for on every turn. Domain rules belong in skills.
 - Never put a real brand's name, colours or copy into a skill. Put it in an example
   under `examples/` and label it as an example, or better, leave it to the brand profile.
 - Update `CHANGELOG.md` with every rule change.
+- Coding rule blocks live in `rules/coding/blocks/`. After editing one, run
+  `node scripts/sync-rules.mjs rules/coding/CODING.md` and sync any local targets.

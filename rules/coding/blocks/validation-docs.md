@@ -1,0 +1,1 @@
+- For prose-only documentation changes, run the project's formatting and lint check and verify affected paths, links, and commands against the source. Changes to executable examples or validation requirements still require the project's full checks.
