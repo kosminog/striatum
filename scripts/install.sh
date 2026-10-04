@@ -38,7 +38,7 @@ ensure_markers() {
   cat >> "$file" <<'MARKERS'
 # Coding rules
 
-Synced from the agents rule library by its scripts/install.sh; edit the blocks
+Synced from the striatum rule library by its scripts/install.sh; edit the blocks
 there and re-run it.
 
 # Development

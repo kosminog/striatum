@@ -1,6 +1,6 @@
 ---
 name: rule-authoring
-description: House format and method for writing or editing a rule in the agents rule library (a skill under skills/, a reviewer agent under agents/, or the brand profile template). Use this skill whenever the user asks to add a rule, create a new skill, write guidelines for Claude, capture a style guide as a skill, edit an existing SKILL.md in this repo, or turn a document of standards into something Claude follows. Trigger it even if the user just says "add rules for X" or "make Claude always do Y" while in the agents repository.
+description: House format and method for writing or editing a rule in the striatum rule library (a skill under skills/, a reviewer agent under agents/, or the brand profile template). Use this skill whenever the user asks to add a rule, create a new skill, write guidelines for Claude, capture a style guide as a skill, edit an existing SKILL.md in this repo, or turn a document of standards into something Claude follows. Trigger it even if the user just says "add rules for X" or "make Claude always do Y" while in the striatum repository.
 ---
 
 # Writing a rule for this library

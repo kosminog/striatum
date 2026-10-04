@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-04 (striatum)
+- Project renamed to `striatum`: GitHub repository `kosminog/striatum`, npm package
+  `striatum` (unscoped) at 0.1.2, CLI `striatum`. `octolith` was never published;
+  npm's similarity guard rejected it as too close to `octokit`.
+
 ## 2026-10-04 (octolith)
 - Package renamed to `octolith` (unscoped) and bumped to 0.1.1; the CLI is now
   `octolith` with the same `sync`, `emit` and `install` commands. 0.1.0 was never
@@ -12,7 +17,7 @@
 - `.github/workflows/publish.yml` publishes to npm with provenance on a `v*` tag
   through trusted publishing, after re-running `scripts/check.sh` and verifying the
   tag matches `package.json`.
-- Repository moved to `kosminog/agents`.
+- Repository moved to `kosminog/agents` (since renamed to `kosminog/striatum`).
 
 ## 2026-10-04 (install)
 - install.sh installs per tool: links `~/.claude/rules/coding` to the emitted
