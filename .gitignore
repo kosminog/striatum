@@ -1,3 +1,5 @@
 .DS_Store
 *-workspace/
 evals/**/outputs/
+node_modules/
+*.tgz
