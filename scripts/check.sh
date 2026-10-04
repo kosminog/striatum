@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Runs the checks CI runs, so a change that passes here passes there:
+#   - bash -n and shellcheck on every tracked *.sh
+#   - node --check on every tracked *.mjs / *.js
+#   - a parse of every tracked *.py
+#   - sync-rules.mjs --check: rules/coding/CODING.md matches its blocks
+#   - check-rules.mjs: skill and agent frontmatter, SKILL.md line budget
+#
+#   scripts/check.sh
+#
+# When shellcheck is not installed it is skipped with a notice, except in CI
+# (CI=true), where it is required.
+set -uo pipefail
+cd "$(dirname "$0")/.." || exit 1
+
+status=0
+ok()    { echo "ok    $*"; }
+fail()  { status=1; echo "FAIL  $*"; }
+files() { git ls-files -- "$@"; }
+
+echo "== shell syntax"
+while IFS= read -r f; do
+  if bash -n "$f"; then ok "$f"; else fail "$f"; fi
+done < <(files '*.sh')
+
+echo "== shellcheck"
+if command -v shellcheck >/dev/null; then
+  if files '*.sh' | xargs shellcheck; then ok "shellcheck"; else fail "shellcheck"; fi
+elif [ "${CI:-}" = "true" ]; then
+  fail "shellcheck is not installed"
+else
+  echo "skip  shellcheck not installed (brew install shellcheck)"
+fi
+
+echo "== node syntax"
+while IFS= read -r f; do
+  if node --check "$f"; then ok "$f"; else fail "$f"; fi
+done < <(files '*.mjs' '*.js')
+
+echo "== python syntax"
+while IFS= read -r f; do
+  if python3 -c 'import ast, sys; ast.parse(open(sys.argv[1], encoding="utf-8").read(), sys.argv[1])' "$f"; then
+    ok "$f"
+  else
+    fail "$f"
+  fi
+done < <(files '*.py')
+
+echo "== rendered coding rules"
+if node scripts/sync-rules.mjs --check rules/coding/CODING.md; then
+  ok "rules/coding/CODING.md"
+else
+  fail "rules/coding/CODING.md is stale; run: node scripts/sync-rules.mjs rules/coding/CODING.md"
+fi
+
+echo "== skill and agent frontmatter"
+if node scripts/check-rules.mjs; then ok "frontmatter"; else fail "frontmatter"; fi
+
+echo
+if [ "$status" -eq 0 ]; then echo "all checks passed"; else echo "some checks failed"; fi
+exit "$status"

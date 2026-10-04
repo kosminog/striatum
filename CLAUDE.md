@@ -31,3 +31,4 @@ short: everything here is paid for on every turn. Domain rules belong in skills.
 - Update `CHANGELOG.md` with every rule change.
 - Coding rule blocks live in `rules/coding/blocks/`. After editing one, run
   `node scripts/sync-rules.mjs rules/coding/CODING.md` and sync any local targets.
+- Run `./scripts/check.sh` before pushing. CI runs the same script on every push and PR.
