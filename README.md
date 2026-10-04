@@ -38,6 +38,7 @@ agents/
   README.md
   AGENTS.md                        universal rules + coding blocks, importable by projects
   CLAUDE.md                        one-line @AGENTS.md import for Claude Code
+  .claude/rules/                   path-scoped rules emitted from blocks (Claude Code)
   CHANGELOG.md
   skills/
     rule-authoring/                how to write a rule in this repo (meta-rule)
@@ -69,6 +70,8 @@ agents/
     sync-rules.mjs                 writes rule blocks into AGENTS.md / .jinja targets
     check.sh                       every CI check: script syntax, rules in sync, frontmatter
     check-rules.mjs                skill and agent frontmatter, SKILL.md line budget
+    emit-rules.mjs                 writes path-scoped blocks as Claude, Cursor or Copilot rule files
+    lib/blocks.mjs                 block loader shared by sync-rules and emit-rules
   .github/workflows/ci.yml         runs scripts/check.sh on push and pull request
 ```
 
@@ -109,7 +112,8 @@ Add a line to `CHANGELOG.md`.
 
 `scripts/check.sh` runs everything CI runs: `bash -n` and shellcheck on shell
 scripts, `node --check` on Node scripts, a parse of Python scripts, a check that
-`rules/coding/CODING.md` matches its blocks, and a check that every skill and agent
+`AGENTS.md`, `rules/coding/CODING.md` and `.claude/rules/` match their blocks, and a
+check that every skill and agent
 has frontmatter with a `name` matching its path, a `description`, and a `SKILL.md`
 under 300 lines. The workflow in `.github/workflows/ci.yml` runs the same script on
 every push to `main` and every pull request.

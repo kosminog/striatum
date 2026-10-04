@@ -77,7 +77,7 @@ The blocks below are rendered from `rules/coding/blocks/` by
 - Never put a real brand's name, colours or copy into a skill. Put it in an example
   under `examples/` and label it as an example, or better, leave it to the brand profile.
 - Update `CHANGELOG.md` with every rule change.
-- Coding rule blocks live in `rules/coding/blocks/`. After editing one, run
-  `node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md` and sync any local
-  targets.
+- Coding rule blocks live in `rules/coding/blocks/`. After editing one, re-render:
+  `node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md` for an always-on block,
+  `node scripts/emit-rules.mjs claude=.claude/rules` for a path-scoped one.
 - Run `./scripts/check.sh` before pushing. CI runs the same script on every push and PR.

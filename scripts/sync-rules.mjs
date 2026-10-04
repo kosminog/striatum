@@ -6,10 +6,12 @@
 // Markdown targets use <!-- shared:name --> ... <!-- /shared:name -->.
 // .jinja targets use {# shared:name -#} ... {#- /shared:name #}, which Copier
 // strips on render. Unknown block names fail. --check reports stale targets
-// and exits 1 without writing.
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, extname, resolve } from "node:path";
+// and exits 1 without writing. A block's frontmatter (see lib/blocks.mjs) is
+// never inlined; only its body is.
+import { readFileSync, writeFileSync } from "node:fs";
+import { extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadBlocks } from "./lib/blocks.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const args = process.argv.slice(2);
@@ -29,12 +31,7 @@ if (!targets.length) {
 }
 
 const blocks = new Map(
-  readdirSync(resolve(rulesDir, "blocks"))
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => [
-      basename(f, ".md"),
-      readFileSync(resolve(rulesDir, "blocks", f), "utf8").replace(/\s+$/, ""),
-    ]),
+  [...loadBlocks(rulesDir)].map(([name, block]) => [name, block.body]),
 );
 
 const styles = {
