@@ -3,7 +3,7 @@
 #   - bash -n and shellcheck on every tracked *.sh
 #   - node --check on every tracked *.mjs / *.js
 #   - a parse of every tracked *.py
-#   - sync-rules.mjs --check: rules/coding/CODING.md matches its blocks
+#   - sync-rules.mjs --check: AGENTS.md and rules/coding/CODING.md match their blocks
 #   - check-rules.mjs: skill and agent frontmatter, SKILL.md line budget
 #
 #   scripts/check.sh
@@ -47,10 +47,10 @@ while IFS= read -r f; do
 done < <(files '*.py')
 
 echo "== rendered coding rules"
-if node scripts/sync-rules.mjs --check rules/coding/CODING.md; then
-  ok "rules/coding/CODING.md"
+if node scripts/sync-rules.mjs --check AGENTS.md rules/coding/CODING.md; then
+  ok "AGENTS.md rules/coding/CODING.md"
 else
-  fail "rules/coding/CODING.md is stale; run: node scripts/sync-rules.mjs rules/coding/CODING.md"
+  fail "rendered rules are stale; run: node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md"
 fi
 
 echo "== skill and agent frontmatter"

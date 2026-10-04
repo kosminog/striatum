@@ -2,7 +2,7 @@
 //   - every skills/<name>/ has a SKILL.md with frontmatter whose name is <name>
 //   - every agents/<name>.md has frontmatter whose name is <name>
 //   - every skill and agent has a non-empty description
-//   - every SKILL.md is under the line budget set in CLAUDE.md
+//   - every SKILL.md is under the line budget set in AGENTS.md
 //
 //   node scripts/check-rules.mjs
 //

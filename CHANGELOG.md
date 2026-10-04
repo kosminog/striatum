@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-04 (agents-md)
+- Project instructions moved from `CLAUDE.md` to `AGENTS.md` with the coding rule
+  blocks rendered inline, so tools that do not expand `@` imports get the full text.
+  `CLAUDE.md` is now a one-line `@AGENTS.md` import. `check.sh` verifies both
+  `AGENTS.md` and `CODING.md` against the blocks.
+
 ## 2026-10-04 (ci)
 - Added `.github/workflows/ci.yml` and `scripts/check.sh`: shell, Node and Python
   syntax checks, `sync-rules.mjs --check` on `CODING.md`, and `scripts/check-rules.mjs`

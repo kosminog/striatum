@@ -35,7 +35,8 @@ and lives in that project's own file, outside the markers.
 `@<repo>/rules/coding/CODING.md` to `~/.claude/CLAUDE.md`. Rules apply on every
 turn; nothing to do per project.
 
-**Claude Code, one project.** Add the same import line to the project's `CLAUDE.md`.
+**Claude Code, one project.** Add the same import line to the project's `CLAUDE.md`
+or `AGENTS.md`; Claude Code expands `@path` imports in both.
 
 **AGENTS.md projects (and the project-starter template).** Put empty marker pairs
 where each block should appear, then sync:

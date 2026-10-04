@@ -15,8 +15,10 @@ Three other layers sit around the skills:
 
 - `agents/` holds **reviewer personas**. Run one after the work is done to check it
   against the rules from a fresh context.
-- `CLAUDE.md` holds the **universal rules** that apply on every turn. It is short on
-  purpose. Projects can import it.
+- `AGENTS.md` holds the **universal rules** that apply on every turn, with the coding
+  rule blocks rendered inline so any tool that reads `AGENTS.md` gets the full text.
+  `CLAUDE.md` is a one-line `@AGENTS.md` import for Claude Code. Projects can import
+  either.
 - `rules/` holds **tool-agnostic rule blocks** for things that must be always-on
   and readable by any agent, such as the git workflow. They are synced into
   `AGENTS.md` files and the project-starter template, and imported by Claude. See
@@ -34,7 +36,8 @@ project facts from a **brand profile** in the project it is running in
 ```
 agents/
   README.md
-  CLAUDE.md                        universal rules, importable by projects
+  AGENTS.md                        universal rules + coding blocks, importable by projects
+  CLAUDE.md                        one-line @AGENTS.md import for Claude Code
   CHANGELOG.md
   skills/
     rule-authoring/                how to write a rule in this repo (meta-rule)
@@ -89,7 +92,7 @@ a plugin marketplace. The folder layout above is already plugin-shaped; nothing 
 ## Use in a project
 
 1. Copy `templates/brand-profile.md` to the project as `brand.md` and fill it in.
-2. Optionally add `@~/dev/agents/CLAUDE.md` to the project's `CLAUDE.md` to import
+2. Optionally add `@~/dev/agents/AGENTS.md` to the project's `CLAUDE.md` to import
    the universal rules.
 3. Ask for the work in plain language. The matching skill loads on its own.
 4. For a second opinion, ask for the reviewer: "have the brand reviewer check this".
