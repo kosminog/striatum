@@ -9,7 +9,7 @@ so that Claude Code, Codex, Cursor and anything else that reads `AGENTS.md` or
 ```
 rules/coding/
   README.md
-  CODING.md          rendered bundle of every block; import this from CLAUDE.md
+  CODING.md          rendered bundle of every always-on block; import this from CLAUDE.md
   blocks/
     development.md   dependency and architecture decisions, tooling, style
     git-workflow.md  branches, preservation of unrelated work, PRs, cleanup
@@ -17,6 +17,7 @@ rules/coding/
     releases.md      tag safety
     validation-docs.md       what to run for prose-only changes
     validation-reporting.md  tests, baselines, reporting
+    shell-scripts.md         path-scoped to **/*.sh: shell script conventions
 ```
 
 Each block file is the exact text that lands between a pair of markers in a
@@ -57,10 +58,40 @@ matching the project-starter template, so the markers vanish on render.
 A project opts out of a block by not carrying its markers. A project adds a
 project-specific rule by writing it outside the markers.
 
+## Path-scoped blocks
+
+A block whose frontmatter carries `paths` applies only to matching files. It is
+not inlined into `AGENTS.md` or `CODING.md`; `scripts/emit-rules.mjs` writes it in
+the format each tool reads for file-scoped instructions:
+
+```bash
+node scripts/emit-rules.mjs claude=.claude/rules
+node scripts/emit-rules.mjs cursor=.cursor/rules copilot=.github/instructions
+node scripts/emit-rules.mjs --check claude=.claude/rules   # CI: fail when stale
+```
+
+The frontmatter is the only metadata a block carries:
+
+```markdown
+---
+description: Conventions for shell scripts, applied when a *.sh file is edited
+paths:
+  - "**/*.sh"
+---
+```
+
+Claude Code reads `paths` from the emitted file, Cursor gets `globs` with
+`alwaysApply: false`, and Copilot gets `applyTo`. Emitted files carry a marker
+comment; the script removes a marked file whose block is gone and never touches an
+unmarked file. A tool with no file scoping, one that reads only `AGENTS.md`, can
+still carry the block inline by adding its markers.
+
 ## Editing a rule
 
 1. Edit the block in `blocks/`.
-2. Run `node scripts/sync-rules.mjs rules/coding/CODING.md` and any other targets
-   you maintain locally (the starter template, for one).
+2. Re-render: `node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md` for an
+   always-on block, `node scripts/emit-rules.mjs claude=.claude/rules` for a
+   path-scoped one, plus any other targets you maintain locally (the starter
+   template, for one).
 3. Add a `CHANGELOG.md` line. Downstream projects generated from the starter
    receive the change through a template release and `copier update`.

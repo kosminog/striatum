@@ -4,6 +4,7 @@
 #   - node --check on every tracked *.mjs / *.js
 #   - a parse of every tracked *.py
 #   - sync-rules.mjs --check: AGENTS.md and rules/coding/CODING.md match their blocks
+#   - emit-rules.mjs --check: .claude/rules matches the path-scoped blocks
 #   - check-rules.mjs: skill and agent frontmatter, SKILL.md line budget
 #
 #   scripts/check.sh
@@ -51,6 +52,13 @@ if node scripts/sync-rules.mjs --check AGENTS.md rules/coding/CODING.md; then
   ok "AGENTS.md rules/coding/CODING.md"
 else
   fail "rendered rules are stale; run: node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md"
+fi
+
+echo "== path-scoped rule files"
+if node scripts/emit-rules.mjs --check claude=.claude/rules; then
+  ok ".claude/rules"
+else
+  fail "path-scoped rule files are stale; run: node scripts/emit-rules.mjs claude=.claude/rules"
 fi
 
 echo "== skill and agent frontmatter"

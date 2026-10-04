@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-04 (path-scoped)
+- Blocks may carry `description` and `paths` frontmatter. `scripts/emit-rules.mjs`
+  writes path-scoped blocks as Claude (`.claude/rules`), Cursor (`.cursor/rules`) or
+  Copilot (`.github/instructions`) rule files; `sync-rules.mjs` inlines bodies only.
+- New `shell-scripts` block scoped to `**/*.sh`; its Claude rendering is committed
+  under `.claude/rules/` and verified by `check.sh`.
+
 ## 2026-10-04 (agents-md)
 - Project instructions moved from `CLAUDE.md` to `AGENTS.md` with the coding rule
   blocks rendered inline, so tools that do not expand `@` imports get the full text.
