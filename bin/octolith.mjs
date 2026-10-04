@@ -3,9 +3,9 @@
 // scripts/, which defaults to this package's own rule blocks, so a project that
 // installs the package can sync and emit rules without cloning the repo.
 //
-//   agents-rules sync [--check] [--rules DIR] TARGET...     scripts/sync-rules.mjs
-//   agents-rules emit [--check] [--rules DIR] FORMAT=DIR... scripts/emit-rules.mjs
-//   agents-rules install                                    scripts/install.sh
+//   octolith sync [--check] [--rules DIR] TARGET...     scripts/sync-rules.mjs
+//   octolith emit [--check] [--rules DIR] FORMAT=DIR... scripts/emit-rules.mjs
+//   octolith install                                    scripts/install.sh
 //
 // install links skills, agents and rules into the tool directories under $HOME
 // and points them at this package, so run it from a global install, never from
@@ -20,7 +20,7 @@ const commands = {
 };
 
 const usage = [
-  "usage: agents-rules <command> [args]",
+  "usage: octolith <command> [args]",
   "",
   "  sync [--check] [--rules DIR] TARGET...      write rule blocks into marker regions",
   "  emit [--check] [--rules DIR] FORMAT=DIR...  write path-scoped blocks as tool rule files",
@@ -33,7 +33,7 @@ if (!command || command === "--help" || command === "-h") {
   process.exit(command ? 0 : 2);
 }
 if (!(command in commands)) {
-  console.error(`agents-rules: unknown command "${command}"\n\n${usage}`);
+  console.error(`octolith: unknown command "${command}"\n\n${usage}`);
   process.exit(2);
 }
 
@@ -43,7 +43,7 @@ const result = spawnSync(shell ? "bash" : process.execPath, [script, ...args], {
   stdio: "inherit",
 });
 if (result.error) {
-  console.error(`agents-rules: ${result.error.message}`);
+  console.error(`octolith: ${result.error.message}`);
   process.exit(1);
 }
 process.exit(result.status ?? 1);
