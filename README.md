@@ -77,10 +77,16 @@ agents/
 
 ## Install
 
-**Personal (every project on this machine).** `scripts/install.sh` symlinks each
-skill and agent into your user-level Claude directory and adds one import line to
-`~/.claude/CLAUDE.md` so the coding rules apply everywhere. It skips anything
-already present.
+**Personal (every tool on this machine).** `scripts/install.sh` installs for each
+tool it finds. It is safe to re-run: links it did not create are left alone and
+reported, and synced files are brought up to date, so run it again after editing
+a rule block.
+
+| Tool | What it installs |
+| :- | :- |
+| Claude Code | skills and agents linked into `~/.claude/`, `~/.claude/rules/coding` linked to the emitted path-scoped rules, and an import of `rules/coding/CODING.md` in `~/.claude/CLAUDE.md` |
+| Codex | skills linked into `~/.agents/skills/`, and the always-on coding blocks appended once to `~/.codex/AGENTS.md` between sync markers, then re-synced on every run |
+| Cursor | nothing extra; it reads `~/.claude/skills/` and `~/.agents/skills/` on its own |
 
 ```bash
 ./scripts/install.sh
