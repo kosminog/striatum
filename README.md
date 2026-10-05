@@ -77,6 +77,7 @@ striatum/
     lib/blocks.mjs                 block loader shared by sync-rules and emit-rules
   tests/
     install.sh                     install.sh against a temporary HOME, run by check.sh
+    scripts.test.mjs               block loader, sync-rules and emit-rules, run by check.sh
   .github/workflows/ci.yml         runs scripts/check.sh on push and pull request
   .github/workflows/publish.yml    publishes to npm with provenance on a v* tag
 ```
@@ -92,7 +93,7 @@ a rule block. Run it again after moving the clone, too: links and the
 | Tool | What it installs |
 | :- | :- |
 | Claude Code | skills and agents linked into `~/.claude/`, `~/.claude/rules/coding` linked to the emitted path-scoped rules, and an import of `rules/coding/CODING.md` in `~/.claude/CLAUDE.md` |
-| Codex | skills linked into `~/.agents/skills/`, and the always-on coding blocks appended once to `~/.codex/AGENTS.md` between sync markers, then re-synced on every run |
+| Codex | skills linked into `~/.agents/skills/`, and the always-on coding blocks in `~/.codex/AGENTS.md` between sync markers, with markers added for any block the file lacks and re-synced on every run |
 | Cursor | nothing extra; it reads `~/.claude/skills/` and `~/.agents/skills/` on its own |
 
 ```bash
@@ -105,9 +106,13 @@ files; the blocks come from the installed package, so no clone is needed.
 
 ```bash
 pnpm add -D striatum
-pnpm exec striatum sync AGENTS.md
+pnpm exec striatum sync --init AGENTS.md
 pnpm exec striatum emit claude=.claude/rules cursor=.cursor/rules
 ```
+
+`sync --init` appends an empty marker pair for every always-on block the file
+lacks and then fills them; without `--init`, `sync` only fills the markers already
+present.
 
 Add `striatum sync --check AGENTS.md` to the project's check script so CI
 fails when a dependency bump changes a rule and `AGENTS.md` was not re-synced.
@@ -142,11 +147,13 @@ Add a line to `CHANGELOG.md`.
 
 `scripts/check.sh` runs everything CI runs: `bash -n` and shellcheck on shell
 scripts, `node --check` on Node scripts, a parse of Python scripts, a check that
-`AGENTS.md`, `rules/coding/CODING.md` and `.claude/rules/` match their blocks, and a
-check that every skill and agent
-has frontmatter with a `name` matching its path, a `description`, and a `SKILL.md`
-under 300 lines. The workflow in `.github/workflows/ci.yml` runs the same script on
-every push to `main` and every pull request.
+`AGENTS.md`, `rules/coding/CODING.md` and `.claude/rules/` match their blocks, a
+check that every skill and agent has frontmatter with a `name` matching its path, a
+`description` that names a non-trigger, and a `SKILL.md` under 300 lines, the Node
+tests in `tests/*.test.mjs` for the block loader and the sync and emit scripts, and
+`tests/install.sh`, which runs `install.sh` against a temporary home directory. The
+workflow in `.github/workflows/ci.yml` runs the same script on every push to `main`
+and every pull request.
 
 ```bash
 pnpm check
@@ -154,11 +161,12 @@ pnpm check
 
 ## Release
 
-Bump `version` in `package.json`, add the `CHANGELOG.md` entry, merge, then tag
-the merge commit `v<version>` and push the tag. `.github/workflows/publish.yml`
-re-runs the checks, verifies the tag matches the version, and publishes to npm
-through trusted publishing with provenance. Never move an existing tag; cut a new
-version instead.
+Bump `version` in `package.json`, move the `Unreleased` entries in `CHANGELOG.md`
+under a `## <version>` heading, merge, then tag the merge commit `v<version>` and
+push the tag. `.github/workflows/publish.yml` re-runs the checks, verifies the tag
+matches the version, and publishes to npm through trusted publishing with
+provenance; a version already on the registry is skipped rather than failed. Never
+move an existing tag; cut a new version instead.
 
 ## Planned rule groups
 

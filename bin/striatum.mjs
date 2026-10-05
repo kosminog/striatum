@@ -3,9 +3,9 @@
 // scripts/, which defaults to this package's own rule blocks, so a project that
 // installs the package can sync and emit rules without cloning the repo.
 //
-//   striatum sync [--check] [--rules DIR] TARGET...     scripts/sync-rules.mjs
-//   striatum emit [--check] [--rules DIR] FORMAT=DIR... scripts/emit-rules.mjs
-//   striatum install                                    scripts/install.sh
+//   striatum sync [--check] [--init] [--rules DIR] TARGET...  scripts/sync-rules.mjs
+//   striatum emit [--check] [--rules DIR] FORMAT=DIR...       scripts/emit-rules.mjs
+//   striatum install                                          scripts/install.sh
 //
 // install links skills, agents and rules into the tool directories under $HOME
 // and points them at this package, so run it from a global install, never from
@@ -22,9 +22,10 @@ const commands = {
 const usage = [
   "usage: striatum <command> [args]",
   "",
-  "  sync [--check] [--rules DIR] TARGET...      write rule blocks into marker regions",
-  "  emit [--check] [--rules DIR] FORMAT=DIR...  write path-scoped blocks as tool rule files",
-  "  install                                     link skills, agents and rules for the tools on this machine",
+  "  sync [--check] [--init] [--rules DIR] TARGET...  write rule blocks into marker regions;",
+  "                                                   --init adds markers for blocks the file lacks",
+  "  emit [--check] [--rules DIR] FORMAT=DIR...       write path-scoped blocks as tool rule files",
+  "  install                                          link skills, agents and rules for the tools on this machine",
 ].join("\n");
 
 const [command, ...args] = process.argv.slice(2);

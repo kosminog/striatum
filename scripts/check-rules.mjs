@@ -2,6 +2,8 @@
 //   - every skills/<name>/ has a SKILL.md with frontmatter whose name is <name>
 //   - every agents/<name>.md has frontmatter whose name is <name>
 //   - every skill and agent has a non-empty description
+//   - every skill description names a non-trigger ("Do not use ..."), as the
+//     rule-authoring checklist requires, so neighbouring skills stay apart
 //   - every SKILL.md is under the line budget set in AGENTS.md
 //
 //   node scripts/check-rules.mjs
@@ -10,46 +12,33 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { fold, parseFrontmatter } from "./lib/blocks.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const MAX_SKILL_LINES = 300;
 const NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const NON_TRIGGER = /\bdo not use\b/i;
 const errors = [];
 const fail = (file, message) => errors.push(`${file}: ${message}`);
 
-// Parses the leading --- block as flat key: value pairs. Indented lines continue
-// the previous value, so a folded description still parses.
 function frontmatter(file) {
   const text = readFileSync(resolve(repoRoot, file), "utf8");
-  const lines = text.split("\n");
-  if (lines[0] !== "---") {
+  let parsed;
+  try {
+    parsed = parseFrontmatter(text, file);
+  } catch (error) {
+    errors.push(error.message);
+    return null;
+  }
+  if (!parsed.fields) {
     fail(file, "must start with a --- frontmatter line");
     return null;
   }
-  const end = lines.indexOf("---", 1);
-  if (end === -1) {
-    fail(file, "frontmatter is not closed with ---");
-    return null;
-  }
-  const fields = {};
-  let last = null;
-  for (const line of lines.slice(1, end)) {
-    const kv = /^([A-Za-z][\w-]*):\s*(.*)$/.exec(line);
-    if (kv) {
-      if (kv[1] in fields) fail(file, `duplicate frontmatter key "${kv[1]}"`);
-      fields[kv[1]] = kv[2].trim();
-      last = kv[1];
-    } else if (last && /^\s+\S/.test(line)) {
-      fields[last] = `${fields[last]} ${line.trim()}`.trim();
-    } else {
-      fail(file, `malformed frontmatter line ${JSON.stringify(line)}`);
-    }
-  }
-  const lineCount = lines.length - (text.endsWith("\n") ? 1 : 0);
-  return { fields, lineCount };
+  const fields = Object.fromEntries([...parsed.fields].map(([k, v]) => [k, fold(v)]));
+  return { fields, lineCount: parsed.lineCount };
 }
 
-function checkRule(file, expectedName, maxLines) {
+function checkRule(file, expectedName, { maxLines = 0, nonTrigger = false } = {}) {
   const parsed = frontmatter(file);
   if (!parsed) return;
   const { fields, lineCount } = parsed;
@@ -57,6 +46,9 @@ function checkRule(file, expectedName, maxLines) {
     fail(file, `name must be "${expectedName}", got ${JSON.stringify(fields.name ?? null)}`);
   }
   if (!fields.description) fail(file, "description is required");
+  else if (nonTrigger && !NON_TRIGGER.test(fields.description)) {
+    fail(file, 'description must name a non-trigger ("Do not use it for ...")');
+  }
   if (maxLines && lineCount > maxLines) {
     fail(file, `${lineCount} lines; the limit is ${maxLines} (move material to references/)`);
   }
@@ -72,7 +64,7 @@ for (const name of readdirSync(skillsDir).sort()) {
     fail(file, "missing");
     continue;
   }
-  checkRule(file, name, MAX_SKILL_LINES);
+  checkRule(file, name, { maxLines: MAX_SKILL_LINES, nonTrigger: true });
 }
 
 const agentsDir = resolve(repoRoot, "agents");
@@ -80,7 +72,7 @@ for (const entry of readdirSync(agentsDir).sort()) {
   if (!entry.endsWith(".md")) continue;
   const name = basename(entry, ".md");
   if (!NAME.test(name)) fail(`agents/${entry}`, "file name must be lowercase words joined by hyphens");
-  checkRule(`agents/${entry}`, name, 0);
+  checkRule(`agents/${entry}`, name);
 }
 
 for (const error of errors) console.error(error);

@@ -11,8 +11,9 @@
 #                 ~/.claude/rules/coding -> .claude/rules (path-scoped rules),
 #                 ~/.claude/CLAUDE.md imports rules/coding/CODING.md
 #   Codex         ~/.agents/skills/<skill> links (Cursor reads them too), and the
-#                 always-on blocks in ~/.codex/AGENTS.md between sync markers,
-#                 appended once and re-synced on every run
+#                 always-on blocks in ~/.codex/AGENTS.md between sync markers;
+#                 sync-rules.mjs --init adds markers for any block the file
+#                 lacks and re-syncs them on every run
 #   Cursor        reads ~/.claude/skills and ~/.agents/skills on its own
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
@@ -39,46 +40,6 @@ link() {
     ln -s "$src" "$dst"
     echo "linked   $name"
   fi
-}
-
-# Appends empty marker pairs for the always-on blocks to FILE once; the sync
-# below fills them. Existing content is kept.
-ensure_markers() {
-  local file="$1"
-  if [ -f "$file" ] && grep -qF '<!-- shared:development -->' "$file"; then
-    return
-  fi
-  if [ -s "$file" ]; then printf '\n' >> "$file"; fi
-  cat >> "$file" <<'MARKERS'
-# Coding rules
-
-Synced from the striatum rule library by its scripts/install.sh; edit the blocks
-there and re-run it.
-
-# Development
-
-<!-- shared:development -->
-<!-- /shared:development -->
-
-<!-- shared:git-workflow -->
-<!-- /shared:git-workflow -->
-
-<!-- shared:commits -->
-<!-- /shared:commits -->
-
-# Releases
-
-<!-- shared:releases -->
-<!-- /shared:releases -->
-
-# Validation
-
-<!-- shared:validation-docs -->
-<!-- /shared:validation-docs -->
-<!-- shared:validation-reporting -->
-<!-- /shared:validation-reporting -->
-MARKERS
-  echo "added    coding rule markers to ${file#"${HOME}"/}"
 }
 
 # Makes FILE import this repo's CODING.md: the exact line is kept, an import of
@@ -125,10 +86,8 @@ if [ -d "${HOME}/.codex" ]; then
   for d in "$REPO"/skills/*/; do
     link "${d%/}" "${HOME}/.agents/skills/$(basename "$d")"
   done
-  CODEX_AGENTS="${HOME}/.codex/AGENTS.md"
-  ensure_markers "$CODEX_AGENTS"
   if command -v node >/dev/null; then
-    node "$REPO/scripts/sync-rules.mjs" "$CODEX_AGENTS"
+    node "$REPO/scripts/sync-rules.mjs" --init "${HOME}/.codex/AGENTS.md"
   else
     echo "skipped  sync of .codex/AGENTS.md (node not installed)"
   fi

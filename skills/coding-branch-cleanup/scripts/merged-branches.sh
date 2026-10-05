@@ -11,18 +11,26 @@ if [ -z "$default" ]; then
 fi
 if [ -z "$default" ]; then
   for c in main master; do
-    git show-ref --verify --quiet "refs/heads/$c" && default="$c" && break
+    if git show-ref --verify --quiet "refs/heads/$c"; then
+      default="$c"
+      break
+    fi
   done
 fi
-[ -n "$default" ] || { echo "cannot determine default branch; pass it as the first argument" >&2; exit 2; }
+if [ -z "$default" ]; then
+  echo "cannot determine default branch; pass it as the first argument" >&2
+  exit 2
+fi
 
 git fetch --prune --quiet origin 2>/dev/null || true
 current="$(git branch --show-current || true)"
 worktrees="$(git worktree list --porcelain | awk '/^branch /{sub("refs/heads/","",$2); print $2}')"
 
 printf "%-45s %-16s %-8s %s\n" BRANCH STATUS REMOTE NOTE
-for b in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
-  [ "$b" = "$default" ] && continue
+while IFS= read -r b; do
+  if [ "$b" = "$default" ]; then
+    continue
+  fi
   if git merge-base --is-ancestor "$b" "$default"; then
     status="merged"
   else
@@ -37,9 +45,15 @@ for b in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
     fi
   fi
   remote="gone"
-  git show-ref --verify --quiet "refs/remotes/origin/$b" && remote="present"
+  if git show-ref --verify --quiet "refs/remotes/origin/$b"; then
+    remote="present"
+  fi
   note=""
-  printf '%s\n' "$worktrees" | grep -qx "$b" && note="checked out in worktree"
-  [ "$b" = "$current" ] && note="current branch"
+  if printf '%s\n' "$worktrees" | grep -qx "$b"; then
+    note="checked out in worktree"
+  fi
+  if [ "$b" = "$current" ]; then
+    note="current branch"
+  fi
   printf "%-45s %-16s %-8s %s\n" "$b" "$status" "$remote" "$note"
-done
+done < <(git for-each-ref --format='%(refname:short)' refs/heads/)

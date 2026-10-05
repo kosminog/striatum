@@ -22,19 +22,10 @@ import {
 } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadBlocks } from "./lib/blocks.mjs";
+import { loadBlocks, parseArgs } from "./lib/blocks.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
-const args = process.argv.slice(2);
-const check = args.includes("--check");
-const rulesIdx = args.indexOf("--rules");
-const rulesDir = resolve(
-  repoRoot,
-  rulesIdx === -1 ? "rules/coding" : args[rulesIdx + 1],
-);
-const targets = args.filter(
-  (a, i) => !a.startsWith("--") && !(rulesIdx !== -1 && i === rulesIdx + 1),
-);
+const args = parseArgs(process.argv.slice(2), { flags: ["check"], repoRoot });
 
 const quote = (s) => JSON.stringify(s);
 const formats = {
@@ -56,16 +47,17 @@ const formats = {
   },
 };
 
-if (!targets.length || !targets.every((t) => /^[a-z]+=.+$/.test(t))) {
+if (!args?.targets.length || !args.targets.every((t) => /^[a-z]+=.+$/.test(t))) {
   console.error("usage: emit-rules.mjs [--check] [--rules DIR] FORMAT=DIR...");
   console.error(`formats: ${Object.keys(formats).join(", ")}`);
   process.exit(2);
 }
 
+const { check, rulesDir, targets } = args;
 const MARKER = "by scripts/emit-rules.mjs";
 const scoped = [...loadBlocks(rulesDir)].filter(([, b]) => b.paths.length);
 
-function render(format, name, block) {
+function render(format, block) {
   const source = relative(repoRoot, block.file);
   return [
     "---",
@@ -89,7 +81,7 @@ for (const target of targets) {
   }
   const dir = resolve(process.cwd(), dirArg);
   const expected = new Map(
-    scoped.map(([name, block]) => [`${name}${format.ext}`, render(format, name, block)]),
+    scoped.map(([name, block]) => [`${name}${format.ext}`, render(format, block)]),
   );
   const missing = [];
   const stale = [];

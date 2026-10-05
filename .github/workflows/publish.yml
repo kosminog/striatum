@@ -3,6 +3,8 @@ name: Publish
 # Publishes the package to npm when a v* tag is pushed. Authenticates through
 # npm trusted publishing (OIDC), so no token is stored; the trusted publisher
 # for this repository and workflow file must be configured on npmjs.com first.
+# A tag for a version that is already on the registry is a no-op, so tagging a
+# release that was published by hand does not fail the run.
 
 on:
   push:
@@ -32,5 +34,15 @@ jobs:
             echo "tag $GITHUB_REF_NAME does not match package version $version"
             exit 1
           fi
+      - name: Skip a version that is already on npm
+        id: registry
+        run: |
+          name="$(node -p 'require("./package.json").name')"
+          version="$(node -p 'require("./package.json").version')"
+          if npm view "$name@$version" version >/dev/null 2>&1; then
+            echo "$name@$version is already on npm; nothing to publish"
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Publish
+        if: steps.registry.outputs.published != 'true'
         run: npm publish --provenance --access public
