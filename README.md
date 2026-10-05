@@ -92,7 +92,7 @@ a rule block. Run it again after moving the clone, too: links and the
 | Tool | What it installs |
 | :- | :- |
 | Claude Code | skills and agents linked into `~/.claude/`, `~/.claude/rules/coding` linked to the emitted path-scoped rules, and an import of `rules/coding/CODING.md` in `~/.claude/CLAUDE.md` |
-| Codex | skills linked into `~/.agents/skills/`, and the always-on coding blocks appended once to `~/.codex/AGENTS.md` between sync markers, then re-synced on every run |
+| Codex | skills linked into `~/.agents/skills/`, and the always-on coding blocks in `~/.codex/AGENTS.md` between sync markers, with markers added for any block the file lacks and re-synced on every run |
 | Cursor | nothing extra; it reads `~/.claude/skills/` and `~/.agents/skills/` on its own |
 
 ```bash
@@ -105,9 +105,13 @@ files; the blocks come from the installed package, so no clone is needed.
 
 ```bash
 pnpm add -D striatum
-pnpm exec striatum sync AGENTS.md
+pnpm exec striatum sync --init AGENTS.md
 pnpm exec striatum emit claude=.claude/rules cursor=.cursor/rules
 ```
+
+`sync --init` appends an empty marker pair for every always-on block the file
+lacks and then fills them; without `--init`, `sync` only fills the markers already
+present.
 
 Add `striatum sync --check AGENTS.md` to the project's check script so CI
 fails when a dependency bump changes a rule and `AGENTS.md` was not re-synced.

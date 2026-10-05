@@ -119,6 +119,40 @@ expect_line "$out" "ok       .claude/CLAUDE.md imports coding rules"
 refuse_line "$out" "relinked "
 refuse_line "$out" "updated "
 
+echo "== codex"
+mkdir -p "$FAKE_HOME/.codex"
+printf '%s\n' "# mine" "" "Keep this." > "$FAKE_HOME/.codex/AGENTS.md"
+out="$(run_install)" || fail "install.sh exited $?"
+expect_line "$out" "linked   .agents/skills/$skill_a"
+expect_target "$FAKE_HOME/.agents/skills/$skill_a" "$REPO/skills/$skill_a"
+expect_line "$out" ".codex/AGENTS.md: added markers for"
+while IFS= read -r block; do
+  if grep -qF "<!-- shared:$block -->" "$FAKE_HOME/.codex/AGENTS.md"; then
+    ok ".codex/AGENTS.md carries $block"
+  else
+    fail ".codex/AGENTS.md lacks $block"
+  fi
+done < <(node -e '
+  import("./scripts/lib/blocks.mjs").then(({ loadBlocks }) => {
+    for (const [name, block] of loadBlocks("rules/coding")) {
+      if (!block.paths.length) console.log(name);
+    }
+  });
+')
+if grep -qx "# Development" "$FAKE_HOME/.codex/AGENTS.md"; then
+  ok ".codex/AGENTS.md has a heading for the heading-less block"
+else
+  fail ".codex/AGENTS.md lacks the # Development heading"
+fi
+if [ "$(head -1 "$FAKE_HOME/.codex/AGENTS.md")" = "# mine" ]; then
+  ok ".codex/AGENTS.md content kept"
+else
+  fail ".codex/AGENTS.md content replaced"
+fi
+out="$(run_install)" || fail "install.sh exited $?"
+expect_line "$out" ".codex/AGENTS.md: up to date"
+refuse_line "$out" "added markers"
+
 echo
 if [ "$status" -eq 0 ]; then echo "install.sh tests passed"; else echo "install.sh tests failed"; fi
 exit "$status"

@@ -21,7 +21,9 @@ rules/coding/
 ```
 
 Each block file is the exact text that lands between a pair of markers in a
-target file. A block may begin with a heading. Block names are the file names.
+target file. A block may begin with a heading; when it does not, `--init` puts
+one made from the block name above the markers it appends, the way `CODING.md`
+carries `# Development` outside its markers. Block names are the file names.
 
 ## What belongs here
 
@@ -39,9 +41,11 @@ turn; nothing to do per project.
 **Claude Code, one project.** Add the same import line to the project's `CLAUDE.md`
 or `AGENTS.md`; Claude Code expands `@path` imports in both.
 
-**Codex, every project on this machine.** `scripts/install.sh` appends empty
-marker pairs for the always-on blocks to `~/.codex/AGENTS.md` once and syncs them
-on every run. Codex has no import syntax, so the text is inlined.
+**Codex, every project on this machine.** `scripts/install.sh` runs
+`sync-rules.mjs --init` on `~/.codex/AGENTS.md`, which appends an empty marker
+pair for every always-on block the file lacks and then syncs them, so a block
+added later reaches Codex on the next run. Codex has no import syntax, so the
+text is inlined.
 
 **Any project, from npm.** `pnpm add -D striatum` and run
 `pnpm exec striatum sync AGENTS.md`; the blocks come from the installed
@@ -49,7 +53,8 @@ package. `striatum emit claude=.claude/rules` does the same for path-scoped
 blocks. Both accept `--check` for CI.
 
 **AGENTS.md projects (and the project-starter template).** Put empty marker pairs
-where each block should appear, then sync:
+where each block should appear, then sync. `--init` appends the pairs for every
+always-on block the file does not yet carry, which is the quick way to start:
 
 ```
 <!-- shared:git-workflow -->
@@ -57,6 +62,7 @@ where each block should appear, then sync:
 ```
 
 ```bash
+node scripts/sync-rules.mjs --init path/to/AGENTS.md    # add missing markers, then sync
 node scripts/sync-rules.mjs path/to/AGENTS.md
 node scripts/sync-rules.mjs --check path/to/AGENTS.md   # CI: fail when stale
 ```
