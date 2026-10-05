@@ -1,6 +1,6 @@
 {
   "name": "striatum",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Rule library for Claude Code, Codex and Cursor: skills, reviewer agents and portable coding rule blocks, with a CLI that syncs the blocks into AGENTS.md and tool rule files",
   "license": "MIT",
   "type": "module",
