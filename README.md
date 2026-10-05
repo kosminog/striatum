@@ -77,6 +77,7 @@ striatum/
     lib/blocks.mjs                 block loader shared by sync-rules and emit-rules
   tests/
     install.sh                     install.sh against a temporary HOME, run by check.sh
+    scripts.test.mjs               block loader, sync-rules and emit-rules, run by check.sh
   .github/workflows/ci.yml         runs scripts/check.sh on push and pull request
   .github/workflows/publish.yml    publishes to npm with provenance on a v* tag
 ```
@@ -146,11 +147,13 @@ Add a line to `CHANGELOG.md`.
 
 `scripts/check.sh` runs everything CI runs: `bash -n` and shellcheck on shell
 scripts, `node --check` on Node scripts, a parse of Python scripts, a check that
-`AGENTS.md`, `rules/coding/CODING.md` and `.claude/rules/` match their blocks, and a
-check that every skill and agent
-has frontmatter with a `name` matching its path, a `description`, and a `SKILL.md`
-under 300 lines. The workflow in `.github/workflows/ci.yml` runs the same script on
-every push to `main` and every pull request.
+`AGENTS.md`, `rules/coding/CODING.md` and `.claude/rules/` match their blocks, a
+check that every skill and agent has frontmatter with a `name` matching its path, a
+`description` that names a non-trigger, and a `SKILL.md` under 300 lines, the Node
+tests in `tests/*.test.mjs` for the block loader and the sync and emit scripts, and
+`tests/install.sh`, which runs `install.sh` against a temporary home directory. The
+workflow in `.github/workflows/ci.yml` runs the same script on every push to `main`
+and every pull request.
 
 ```bash
 pnpm check
