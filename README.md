@@ -75,6 +75,8 @@ striatum/
     check-rules.mjs                skill and agent frontmatter, SKILL.md line budget
     emit-rules.mjs                 writes path-scoped blocks as Claude, Cursor or Copilot rule files
     lib/blocks.mjs                 block loader shared by sync-rules and emit-rules
+  tests/
+    install.sh                     install.sh against a temporary HOME, run by check.sh
   .github/workflows/ci.yml         runs scripts/check.sh on push and pull request
   .github/workflows/publish.yml    publishes to npm with provenance on a v* tag
 ```
@@ -84,7 +86,8 @@ striatum/
 **Personal (every tool on this machine).** `scripts/install.sh` installs for each
 tool it finds. It is safe to re-run: links it did not create are left alone and
 reported, and synced files are brought up to date, so run it again after editing
-a rule block.
+a rule block. Run it again after moving the clone, too: links and the
+`~/.claude/CLAUDE.md` import that still point at the old location are rewritten.
 
 | Tool | What it installs |
 | :- | :- |
