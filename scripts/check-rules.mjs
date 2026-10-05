@@ -10,6 +10,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { fold, parseFrontmatter } from "./lib/blocks.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const MAX_SKILL_LINES = 300;
@@ -17,36 +18,21 @@ const NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const errors = [];
 const fail = (file, message) => errors.push(`${file}: ${message}`);
 
-// Parses the leading --- block as flat key: value pairs. Indented lines continue
-// the previous value, so a folded description still parses.
 function frontmatter(file) {
   const text = readFileSync(resolve(repoRoot, file), "utf8");
-  const lines = text.split("\n");
-  if (lines[0] !== "---") {
+  let parsed;
+  try {
+    parsed = parseFrontmatter(text, file);
+  } catch (error) {
+    errors.push(error.message);
+    return null;
+  }
+  if (!parsed.fields) {
     fail(file, "must start with a --- frontmatter line");
     return null;
   }
-  const end = lines.indexOf("---", 1);
-  if (end === -1) {
-    fail(file, "frontmatter is not closed with ---");
-    return null;
-  }
-  const fields = {};
-  let last = null;
-  for (const line of lines.slice(1, end)) {
-    const kv = /^([A-Za-z][\w-]*):\s*(.*)$/.exec(line);
-    if (kv) {
-      if (kv[1] in fields) fail(file, `duplicate frontmatter key "${kv[1]}"`);
-      fields[kv[1]] = kv[2].trim();
-      last = kv[1];
-    } else if (last && /^\s+\S/.test(line)) {
-      fields[last] = `${fields[last]} ${line.trim()}`.trim();
-    } else {
-      fail(file, `malformed frontmatter line ${JSON.stringify(line)}`);
-    }
-  }
-  const lineCount = lines.length - (text.endsWith("\n") ? 1 : 0);
-  return { fields, lineCount };
+  const fields = Object.fromEntries([...parsed.fields].map(([k, v]) => [k, fold(v)]));
+  return { fields, lineCount: parsed.lineCount };
 }
 
 function checkRule(file, expectedName, maxLines) {

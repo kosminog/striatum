@@ -11,24 +11,15 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadBlocks } from "./lib/blocks.mjs";
+import { loadBlocks, parseArgs } from "./lib/blocks.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
-const args = process.argv.slice(2);
-const check = args.includes("--check");
-const rulesIdx = args.indexOf("--rules");
-const rulesDir = resolve(
-  repoRoot,
-  rulesIdx === -1 ? "rules/coding" : args[rulesIdx + 1],
-);
-const targets = args.filter(
-  (a, i) => !a.startsWith("--") && !(rulesIdx !== -1 && i === rulesIdx + 1),
-);
-
-if (!targets.length) {
+const args = parseArgs(process.argv.slice(2), { flags: ["check"], repoRoot });
+if (!args?.targets.length) {
   console.error("usage: sync-rules.mjs [--check] [--rules DIR] TARGET...");
   process.exit(2);
 }
+const { check, rulesDir, targets } = args;
 
 const blocks = new Map(
   [...loadBlocks(rulesDir)].map(([name, block]) => [name, block.body]),
