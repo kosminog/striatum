@@ -6,6 +6,8 @@
 #   - sync-rules.mjs --check: AGENTS.md and rules/coding/CODING.md match their blocks
 #   - emit-rules.mjs --check: .claude/rules matches the path-scoped blocks
 #   - check-rules.mjs: skill and agent frontmatter, SKILL.md line budget
+#   - node --test on tests/*.test.mjs: the block loader, sync-rules.mjs and
+#     emit-rules.mjs against temporary rules and targets
 #   - tests/install.sh: install.sh against a temporary HOME, including repair
 #     after the repo has moved
 #
@@ -65,6 +67,9 @@ fi
 
 echo "== skill and agent frontmatter"
 if node scripts/check-rules.mjs; then ok "frontmatter"; else fail "frontmatter"; fi
+
+echo "== node tests"
+if node --test "tests/*.test.mjs" >/dev/null 2>&1; then ok "tests/*.test.mjs"; else fail "node --test tests/*.test.mjs (run it for details)"; fi
 
 echo "== install.sh in a temporary HOME"
 if tests/install.sh >/dev/null; then ok "tests/install.sh"; else fail "tests/install.sh (run it for details)"; fi
