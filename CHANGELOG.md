@@ -3,7 +3,7 @@
 Entries are keyed by package version, newest first. Each heading says whether that
 version reached npm; a `v<version>` tag marks the commit it was cut from.
 
-## Unreleased
+## 0.2.0 (2026-10-05, on npm, tag `v0.2.0`)
 
 - `logo-critic` and the `brand-logo-generation` iteration protocol name the skill
   that holds the critique checklist and the contact-sheet script instead of a
