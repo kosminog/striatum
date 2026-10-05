@@ -5,7 +5,8 @@
 #   - a parse of every tracked *.py
 #   - sync-rules.mjs --check: AGENTS.md and rules/coding/CODING.md match their blocks
 #   - emit-rules.mjs --check: .claude/rules matches the path-scoped blocks
-#   - check-rules.mjs: skill and agent frontmatter, SKILL.md line budget
+#   - check-rules.mjs: skill and agent frontmatter, a non-trigger in every skill
+#     description, SKILL.md line budget
 #   - node --test on tests/*.test.mjs: the block loader, sync-rules.mjs and
 #     emit-rules.mjs against temporary rules and targets
 #   - tests/install.sh: install.sh against a temporary HOME, including repair

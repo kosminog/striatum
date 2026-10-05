@@ -78,6 +78,6 @@ The blocks below are rendered from `rules/coding/blocks/` by
   under `examples/` and label it as an example, or better, leave it to the brand profile.
 - Update `CHANGELOG.md` with every rule change.
 - Coding rule blocks live in `rules/coding/blocks/`. After editing one, re-render:
-  `node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md` for an always-on block,
-  `node scripts/emit-rules.mjs claude=.claude/rules` for a path-scoped one.
+  `pnpm sync` for an always-on block, `pnpm emit` for a path-scoped one. Both wrap
+  `scripts/sync-rules.mjs` and `scripts/emit-rules.mjs`, which take other targets too.
 - Run `pnpm check` (`scripts/check.sh`) before pushing. CI runs the same script on every push and PR.

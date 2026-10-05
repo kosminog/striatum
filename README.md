@@ -72,7 +72,7 @@ striatum/
     install.sh                     symlinks skills and agents, imports coding rules
     sync-rules.mjs                 writes rule blocks into AGENTS.md / .jinja targets
     check.sh                       every CI check: script syntax, rules in sync, frontmatter
-    check-rules.mjs                skill and agent frontmatter, SKILL.md line budget
+    check-rules.mjs                skill and agent frontmatter, skill non-triggers, SKILL.md line budget
     emit-rules.mjs                 writes path-scoped blocks as Claude, Cursor or Copilot rule files
     lib/blocks.mjs                 block loader shared by sync-rules and emit-rules
   tests/
@@ -148,12 +148,14 @@ Add a line to `CHANGELOG.md`.
 `scripts/check.sh` runs everything CI runs: `bash -n` and shellcheck on shell
 scripts, `node --check` on Node scripts, a parse of Python scripts, a check that
 `AGENTS.md`, `rules/coding/CODING.md` and `.claude/rules/` match their blocks, a
-check that every skill and agent has frontmatter with a `name` matching its path, a
-`description` that names a non-trigger, and a `SKILL.md` under 300 lines, the Node
-tests in `tests/*.test.mjs` for the block loader and the sync and emit scripts, and
-`tests/install.sh`, which runs `install.sh` against a temporary home directory. The
-workflow in `.github/workflows/ci.yml` runs the same script on every push to `main`
-and every pull request.
+check that every skill and agent has frontmatter with a `name` matching its path
+and a `description`, that every skill description names a non-trigger, and that
+every `SKILL.md` is under 300 lines, the Node tests in `tests/*.test.mjs` for the
+block loader and the sync and emit scripts, and `tests/install.sh`, which runs
+`install.sh` against a temporary home directory. Shellcheck is skipped with a
+notice when it is not installed locally and required in CI. The workflow in
+`.github/workflows/ci.yml` runs the same script on every push to `main` and every
+pull request.
 
 ```bash
 pnpm check
@@ -162,11 +164,12 @@ pnpm check
 ## Release
 
 Bump `version` in `package.json`, move the `Unreleased` entries in `CHANGELOG.md`
-under a `## <version>` heading, merge, then tag the merge commit `v<version>` and
-push the tag. `.github/workflows/publish.yml` re-runs the checks, verifies the tag
-matches the version, and publishes to npm through trusted publishing with
-provenance; a version already on the registry is skipped rather than failed. Never
-move an existing tag; cut a new version instead.
+under a heading of the form `## 0.1.3 (2026-10-05, on npm, tag v0.1.3)`, merge,
+then tag the merge commit `v<version>` and push the tag.
+`.github/workflows/publish.yml` re-runs the checks, verifies the tag matches the
+version, and publishes to npm through trusted publishing with provenance; a
+version already on the registry is skipped rather than failed. Never move an
+existing tag; cut a new version instead.
 
 ## Planned rule groups
 

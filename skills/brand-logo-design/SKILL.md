@@ -122,4 +122,5 @@ stopped doing the work, and the deliverable became a system.
 
 - `references/critique-checklist.md` — the scoring sheet used to cull directions
 - `brand-logo-generation` skill — prompting, rounds and vectorising when an image model is involved
-- `examples/` — annotated before/after critiques
+- `examples/` — annotated before/after critiques; its README gives the folder
+  layout, and no case is committed yet

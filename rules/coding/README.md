@@ -48,9 +48,10 @@ added later reaches Codex on the next run. Codex has no import syntax, so the
 text is inlined.
 
 **Any project, from npm.** `pnpm add -D striatum` and run
-`pnpm exec striatum sync AGENTS.md`; the blocks come from the installed
-package. `striatum emit claude=.claude/rules` does the same for path-scoped
-blocks. Both accept `--check` for CI.
+`pnpm exec striatum sync --init AGENTS.md`; the blocks come from the installed
+package, and `--init` adds the markers a file does not yet carry (without it,
+`sync` fails on a file with no markers). `striatum emit claude=.claude/rules`
+does the same for path-scoped blocks. Both accept `--check` for CI.
 
 **AGENTS.md projects (and the project-starter template).** Put empty marker pairs
 where each block should appear, then sync. `--init` appends the pairs for every
@@ -104,9 +105,9 @@ still carry the block inline by adding its markers.
 ## Editing a rule
 
 1. Edit the block in `blocks/`.
-2. Re-render: `node scripts/sync-rules.mjs AGENTS.md rules/coding/CODING.md` for an
-   always-on block, `node scripts/emit-rules.mjs claude=.claude/rules` for a
-   path-scoped one, plus any other targets you maintain locally (the starter
-   template, for one).
+2. Re-render: `pnpm sync` for an always-on block (`AGENTS.md` and `CODING.md`),
+   `pnpm emit` for a path-scoped one (`.claude/rules`). For any other target you
+   maintain locally, such as the starter template, call the scripts directly:
+   `node scripts/sync-rules.mjs <target>` or `node scripts/emit-rules.mjs <format>=<dir>`.
 3. Add a `CHANGELOG.md` line. Downstream projects generated from the starter
    receive the change through a template release and `copier update`.
