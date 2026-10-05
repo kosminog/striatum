@@ -5,6 +5,12 @@ version reached npm; a `v<version>` tag marks the commit it was cut from.
 
 ## Unreleased
 
+- `logo-critic` and the `brand-logo-generation` iteration protocol name the skill
+  that holds the critique checklist and the contact-sheet script instead of a
+  path inside this repository, which does not exist once the library is installed
+  into `~/.claude/` or a project.
+- `coding-dependency-change` no longer names one project's maintenance document;
+  skills stay generic and read such facts from the repository they run in.
 - `scripts/sync-rules.mjs --init` appends an empty marker pair for every always-on
   block a target lacks, under a preamble when the file is new and with a heading
   made from the block name when the block has none, then syncs. `install.sh` uses
@@ -28,8 +34,9 @@ version reached npm; a `v<version>` tag marks the commit it was cut from.
   earlier tag runs had failed: `v0.1.0` because the package was still scoped to an
   account that is not ours, `v0.1.2` because 0.1.2 had been published by hand first.
 - This changelog is keyed by version instead of by date and nickname.
-- Dropped the empty `pnpm-lock.yaml`; the package has no dependencies. The README
-  describes every check `check.sh` runs.
+- Dropped the empty `pnpm-lock.yaml`; the package has no dependencies, and
+  `pnpm-workspace.yaml` sets `lockfile: false` so `pnpm install` does not write one
+  back. The README describes every check `check.sh` runs.
 - `install.sh` repairs an install after the repo has moved. `link()` replaces a
   symlink that dangles or whose target ends with the same repo-relative path (so
   it points at a previous location of this repo) and reports it as `relinked`;

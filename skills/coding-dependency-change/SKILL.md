@@ -18,8 +18,8 @@ it is reproducible and reviewable once agreed.
    documented convention for this category (HTTP client, date handling, testing).
    Reuse wins over adding.
 2. Identify the package manager and lockfile, and whether the repo documents a
-   dependency procedure (the starter has `docs/template-maintenance.md`; others
-   have `CONTRIBUTING.md`). That procedure overrides this skill.
+   dependency procedure (`CONTRIBUTING.md`, or a maintenance page under `docs/`).
+   That procedure overrides this skill.
 3. For an upgrade, read the package's changelog between the current and target
    versions before touching anything.
 

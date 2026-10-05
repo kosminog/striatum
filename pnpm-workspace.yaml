@@ -1,0 +1,2 @@
+# pnpm settings. The package has no dependencies; an empty pnpm-lock.yaml only adds churn.
+lockfile: false

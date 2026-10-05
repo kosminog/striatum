@@ -17,11 +17,13 @@ work.
    Note the single idea, usage set, competitive set and avoid list. If the brief has
    no single idea written down, say so first; you can still score form, but you
    cannot score fit.
-2. Read `skills/brand-logo-design/references/critique-checklist.md` for the ten rows.
+2. Read `references/critique-checklist.md` in the `brand-logo-design` skill for the
+   ten rows. The skill lives wherever this library was installed, such as
+   `~/.claude/skills/` or the project's `.claude/skills/`.
 3. Look at the contact sheet if one exists. If not, and Pillow is available, run
-   `skills/brand-logo-generation/scripts/contact_sheet.py --mono` on the round
-   folder. If neither is possible, view each image and say that you could not
-   judge at small size.
+   `scripts/contact_sheet.py --mono` from the `brand-logo-generation` skill on the
+   round folder. If neither is possible, view each image and say that you could
+   not judge at small size.
 4. Judge in this order, and do not let a later step rescue a failure in an earlier
    one:
    - **Cull.** Text present, colour-dependent, unreadable at 32 px, obvious
