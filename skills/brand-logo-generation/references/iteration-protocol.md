@@ -11,8 +11,9 @@ Every round, in order:
    competitive set folder. Look at the 16 and 32 px rows first.
 5. **Cull.** Drop anything unreadable at 32 px, anything with text, anything in
    colour, anything resembling a known mark. Do this before scoring; it is fast.
-6. **Score.** Ten-row checklist from `brand-logo-design/references/critique-checklist.md`
-   for the survivors (usually 2 to 4). Record in the brief's iteration log.
+6. **Score.** Ten-row checklist from `references/critique-checklist.md` in the
+   sibling `brand-logo-design` skill, for the survivors (usually 2 to 4). Record in
+   the brief's iteration log.
 7. **Read-out.** One paragraph: what won, which rows it lost on, what the next round
    changes and why.
 8. **Decision.** Continue (with the diff), branch (two directions worth pursuing),

@@ -5,6 +5,10 @@ version reached npm; a `v<version>` tag marks the commit it was cut from.
 
 ## Unreleased
 
+- `logo-critic` and the `brand-logo-generation` iteration protocol name the skill
+  that holds the critique checklist and the contact-sheet script instead of a
+  path inside this repository, which does not exist once the library is installed
+  into `~/.claude/` or a project.
 - `scripts/sync-rules.mjs --init` appends an empty marker pair for every always-on
   block a target lacks, under a preamble when the file is new and with a heading
   made from the block name when the block has none, then syncs. `install.sh` uses
