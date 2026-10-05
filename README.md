@@ -122,7 +122,7 @@ a plugin marketplace. The folder layout above is already plugin-shaped; nothing 
 ## Use in a project
 
 1. Copy `templates/brand-profile.md` to the project as `brand.md` and fill it in.
-2. Optionally add `@~/dev/striatum/AGENTS.md` to the project's `CLAUDE.md` to import
+2. Optionally add `@/path/to/striatum/AGENTS.md` to the project's `CLAUDE.md` to import
    the universal rules.
 3. Ask for the work in plain language. The matching skill loads on its own.
 4. For a second opinion, ask for the reviewer: "have the brand reviewer check this".
