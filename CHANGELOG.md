@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-04 (relink)
+- install.sh repairs an install after the repo has moved. `link()` replaces a
+  symlink that dangles or whose target ends with the same repo-relative path (so
+  it points at a previous location of this repo) and reports it as `relinked`;
+  before, the dangling link made `ln -s` fail with "File exists" and abort the
+  run. Entries that exist and are not ours are still skipped.
+- The `~/.claude/CLAUDE.md` step rewrites an existing `@<old-path>/rules/coding/CODING.md`
+  import in place instead of appending a second one, and only appends when there
+  is no import at all.
+- New `tests/install.sh` runs install.sh against a temporary HOME (fresh, re-run,
+  after a move, after repair); `check.sh` and CI run it.
+
 ## 2026-10-04 (striatum)
 - Project renamed to `striatum`: GitHub repository `kosminog/striatum`, npm package
   `striatum` (unscoped) at 0.1.2, CLI `striatum`. `octolith` was never published;
