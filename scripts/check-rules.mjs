@@ -2,6 +2,8 @@
 //   - every skills/<name>/ has a SKILL.md with frontmatter whose name is <name>
 //   - every agents/<name>.md has frontmatter whose name is <name>
 //   - every skill and agent has a non-empty description
+//   - every skill description names a non-trigger ("Do not use ..."), as the
+//     rule-authoring checklist requires, so neighbouring skills stay apart
 //   - every SKILL.md is under the line budget set in AGENTS.md
 //
 //   node scripts/check-rules.mjs
@@ -15,6 +17,7 @@ import { fold, parseFrontmatter } from "./lib/blocks.mjs";
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const MAX_SKILL_LINES = 300;
 const NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const NON_TRIGGER = /\bdo not use\b/i;
 const errors = [];
 const fail = (file, message) => errors.push(`${file}: ${message}`);
 
@@ -35,7 +38,7 @@ function frontmatter(file) {
   return { fields, lineCount: parsed.lineCount };
 }
 
-function checkRule(file, expectedName, maxLines) {
+function checkRule(file, expectedName, { maxLines = 0, nonTrigger = false } = {}) {
   const parsed = frontmatter(file);
   if (!parsed) return;
   const { fields, lineCount } = parsed;
@@ -43,6 +46,9 @@ function checkRule(file, expectedName, maxLines) {
     fail(file, `name must be "${expectedName}", got ${JSON.stringify(fields.name ?? null)}`);
   }
   if (!fields.description) fail(file, "description is required");
+  else if (nonTrigger && !NON_TRIGGER.test(fields.description)) {
+    fail(file, 'description must name a non-trigger ("Do not use it for ...")');
+  }
   if (maxLines && lineCount > maxLines) {
     fail(file, `${lineCount} lines; the limit is ${maxLines} (move material to references/)`);
   }
@@ -58,7 +64,7 @@ for (const name of readdirSync(skillsDir).sort()) {
     fail(file, "missing");
     continue;
   }
-  checkRule(file, name, MAX_SKILL_LINES);
+  checkRule(file, name, { maxLines: MAX_SKILL_LINES, nonTrigger: true });
 }
 
 const agentsDir = resolve(repoRoot, "agents");
@@ -66,7 +72,7 @@ for (const entry of readdirSync(agentsDir).sort()) {
   if (!entry.endsWith(".md")) continue;
   const name = basename(entry, ".md");
   if (!NAME.test(name)) fail(`agents/${entry}`, "file name must be lowercase words joined by hyphens");
-  checkRule(`agents/${entry}`, name, 0);
+  checkRule(`agents/${entry}`, name);
 }
 
 for (const error of errors) console.error(error);
