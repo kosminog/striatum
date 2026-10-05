@@ -161,11 +161,12 @@ pnpm check
 
 ## Release
 
-Bump `version` in `package.json`, add the `CHANGELOG.md` entry, merge, then tag
-the merge commit `v<version>` and push the tag. `.github/workflows/publish.yml`
-re-runs the checks, verifies the tag matches the version, and publishes to npm
-through trusted publishing with provenance. Never move an existing tag; cut a new
-version instead.
+Bump `version` in `package.json`, move the `Unreleased` entries in `CHANGELOG.md`
+under a `## <version>` heading, merge, then tag the merge commit `v<version>` and
+push the tag. `.github/workflows/publish.yml` re-runs the checks, verifies the tag
+matches the version, and publishes to npm through trusted publishing with
+provenance; a version already on the registry is skipped rather than failed. Never
+move an existing tag; cut a new version instead.
 
 ## Planned rule groups
 
